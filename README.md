@@ -94,11 +94,18 @@ pip install -r requirements.txt
 
 ```
 
-5. Run the application:
+5. Connect to todo.db and create tasks table
+
+```bash
+python3 create_db.py
+
+```
+
+6. Run the application:
 
 ```bash
 flask run
 
 ```
 
-6. Access the application at: http://127.0.0.1:5000/
+7. Access the application at: http://127.0.0.1:5000/
