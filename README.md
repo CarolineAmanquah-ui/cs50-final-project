@@ -109,3 +109,18 @@ flask run
 ```
 
 7. Access the application at: http://127.0.0.1:5000/
+
+
+## **Accessing SQLite Database**
+
+After adding tasks to list do the following SQL command lines  for accessing and querying an SQLite database:
+
+```bash
+sqlite> .open todo.db
+sqlite> .tables
+tasks
+sqlite> SELECT * FROM tasks;
+or 
+sqlite> SELECT id, description, CASE WHEN completed = 0 THEN 'No' ELSE 'Yes' END as completed FROM tasks; # a more descriptive SQLite output
+
+```
