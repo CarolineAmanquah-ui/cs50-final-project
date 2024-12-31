@@ -86,18 +86,19 @@ def delete(task_id):
         conn.close()
     return redirect(url_for('index'))
 
-@app.route("/toggle/<int:task_id>")
+@app.route("/toggle/<int:task_id>", methods=["POST"])
 def toggle(task_id):
     conn = get_db_connection()
     try:
         conn.execute('UPDATE tasks SET completed = NOT completed WHERE id = ?', (task_id,))
         conn.commit()
     except sqlite3.DatabaseError as e:
-        print(f"An error occurred: {e}")
+        logging.error(f"An error occurred: {e}")
         return "An error occurred", 500
     finally:
         conn.close()
-    return redirect(url_for('index'))
+    return '', 204  # Respond with no content
+
 
 @app.route("/tasks", methods=["GET"])
 def get_tasks():
@@ -106,6 +107,22 @@ def get_tasks():
     conn.close()
     return {"tasks": [dict(task) for task in tasks]}
 
+@app.route("/edit/<int:task_id>", methods=["POST"])
+def edit_task(task_id):
+    new_description = request.json.get("description")
+    if not new_description:
+        return "Task description cannot be empty", 400
+
+    conn = get_db_connection()
+    try:
+        conn.execute('UPDATE tasks SET description = ? WHERE id = ?', (new_description, task_id))
+        conn.commit()
+    except sqlite3.DatabaseError as e:
+        logging.error(f"An error occurred: {e}")
+        return "An error occurred", 500
+    finally:
+        conn.close()
+    return '', 204
 
 if __name__ == "__main__":
     app.run(debug=True)
